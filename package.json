@@ -1,0 +1,16 @@
+{
+  "name": "a-quick-star",
+  "version": "1.0.0",
+  "description": "An implementation of A* pathfinding algorithm that uses QuadTrees as data structure.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "astar",
+    "pathfinding",
+    "quadtrees"
+  ],
+  "author": "João Eduardo Montandon",
+  "license": "ISC"
+}
