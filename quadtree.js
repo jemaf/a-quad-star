@@ -96,31 +96,31 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	
 	/*
 	 * Determine the quadtrant for an area in this node
-	 * @param Object pRect		bounds of the area to be checked, with x, y, width, height
-	 * @return Integer			index of the subnode (0-3), or -1 if pRect cannot completely fit within a subnode and is part of the parent node
+	 * @param Object obj		bounds of the area to be checked, with x, y, width, height
+	 * @return Integer			index of the subnode (0-3), or -1 if obj cannot completely fit within a subnode and is part of the parent node
 	 */
-	Quadtree.prototype.getIndex = function( pRect ) {
+	Quadtree.prototype.getIndex = function( obj ) {
 		
 		var index 				= -1,
 			verticalMidpoint 	= this.bounds.x + (this.bounds.width / 2),
 			horizontalMidpoint 	= this.bounds.y + (this.bounds.height / 2),
 	 
-			//pRect can completely fit within the top quadrants
-			topQuadrant = (pRect.y < horizontalMidpoint && pRect.y + pRect.height < horizontalMidpoint),
+			//obj can completely fit within the top quadrants
+			topQuadrant = (obj.y <= horizontalMidpoint && obj.y + obj.height <= horizontalMidpoint),
 			
-			//pRect can completely fit within the bottom quadrants
-			bottomQuadrant = (pRect.y > horizontalMidpoint);
-		 
-		//pRect can completely fit within the left quadrants
-		if( pRect.x < verticalMidpoint && pRect.x + pRect.width < verticalMidpoint ) {
+			//obj can completely fit within the bottom quadrants
+			bottomQuadrant = (obj.y >= horizontalMidpoint);
+	 
+		//obj can completely fit within the left quadrants
+		if( obj.x <= verticalMidpoint && obj.x + obj.width <= verticalMidpoint ) {
 			if( topQuadrant ) {
 				index = 1;
 			} else if( bottomQuadrant ) {
 				index = 2;
 			}
 			
-		//pRect can completely fit within the right quadrants	
-		} else if( pRect.x > verticalMidpoint ) {
+		//obj can completely fit within the right quadrants	
+		} else if( obj.x >= verticalMidpoint ) {
 			if( topQuadrant ) {
 				index = 0;
 			} else if( bottomQuadrant ) {
@@ -179,25 +179,25 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	 
 	/*
 	 * Return all objects that could collide with a given area
-	 * @param Object pRect		bounds of the area to be checked, with x, y, width, height
+	 * @param Object obj		bounds of the area to be checked, with x, y, width, height
 	 * @Return Array			array with all detected objects
 	 */
-	Quadtree.prototype.retrieve = function( pRect ) {
+	Quadtree.prototype.retrieve = function( obj ) {
 	 	
-		var index = this.getIndex( pRect ),
+		var index = this.getIndex( obj ),
 			returnObjects = this.objects;
 			
 		//if we have subnodes ...
 		if( typeof this.nodes[0] !== 'undefined' ) {
 			
-			//if pRect fits into a subnode ..
+			//if obj fits into a subnode ..
 			if( index !== -1 ) {
-				returnObjects = returnObjects.concat( this.nodes[index].retrieve( pRect ) );
+				returnObjects = returnObjects.concat( this.nodes[index].retrieve( obj ) );
 				
-			//if pRect does not fit into a subnode, check it against all subnodes
+			//if obj does not fit into a subnode, check it against all subnodes
 			} else {
 				for( var i=0; i < this.nodes.length; i=i+1 ) {
-					returnObjects = returnObjects.concat( this.nodes[i].retrieve( pRect ) );
+					returnObjects = returnObjects.concat( this.nodes[i].retrieve( obj ) );
 				}
 			}
 		}
@@ -230,7 +230,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	Quadtree.prototype.getObjectNode = function( obj ) {
 
 		var index;
-	 	
+
 	 	//if there are no subnodes, object must be here
 	 	if( !this.nodes.length ) {
 
@@ -255,7 +255,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		return false;
 	};
 	
-	
+		
 	/*
 	 * Removes a specific object from the quadtree 
 	 * Does not delete empty subnodes. See cleanup-function
