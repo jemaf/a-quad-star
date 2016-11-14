@@ -2,6 +2,10 @@ var QuadTree = require('./Quadtree'),
 	Heap = require('heap');
 
 
+/**
+ * AQuickStar constructor
+ * @param opt		set of parameters (map matirx, width, and height)
+ */
 function AQuickStar(opt) {
 	opt = opt || {};
 
@@ -21,42 +25,69 @@ function AQuickStar(opt) {
 		for (var j = 0; j < this.height; j++)
 			if (this.map[i][j] == 1)
 				this.qt.insert({x: i, y: j, width: 1, height: 1});
-
-
 }
 
 
+/**
+ * Adds an obstacle to the map
+ * @param x			obstacle x axis
+ * @param y			obstacle y axis
+ */
 AQuickStar.prototype.addObstacle = function(x, y) {
 	this.map[x][y] = 1;
 	this.qt.insert({x: y, y: x, width: 1, height: 1});
 };
 
 
+/**
+ * Removes an obstacle from the map
+ * @param x			obstacle x axis
+ * @param y			obstacle y axis
+ */
 AQuickStar.prototype.removeObstacle = function(x, y) {
 	this.map[x][y] = 0;
 	this.qt.remove({x: y, y: x, width: 1, height: 1});
 };
 
 
+/**
+ * Finds the path using A* algorithm between start and end coordinates using 
+ * the selected heuristic.
+ * 
+ * @param start			A 2-position array with start point's coordinates
+ * @param end			A 2-position array with end point's coordinates
+ * @param heuristic		[Optional]: The heuristic that will be used in A* pathfinding.
+ * 						Default is manhattanHeuristic function
+ * @return path 		An array with the path obtained from A* execution
+ */
 AQuickStar.prototype.findPath = function(start, end, heuristic) {
 
 	start = {x: start[0], y: start[1], width: 1, height: 1};
 	end = {x: end[0], y: end[1], width: 1, height: 1};
 	heuristic = heuristic || this.manhattanHeuristic;
 
+	// add both start and end points to the quadtree
 	this.qt.insert(start);
 	this.qt.insert(end);
 
 	var path = this._findPath(start, end, heuristic);
 
+	// remove both  start and end points from the quadtree
 	this.qt.removeObject(start);
 	this.qt.removeObject(end);
 
 	return path;
 };
 
-/*
+/** 
+ * Private method that executes the modificated version of A* algorithm
  * Algorithm based on http://www.briangrinstead.com/blog/astar-search-algorithm-in-javascript
+ * 
+ * @param start			A 2-position array with start point's coordinates
+ * @param end			A 2-position array with end point's coordinates
+ * @param heuristic		[Optional]: The heuristic that will be used in A* pathfinding.
+ * 						Default is manhattanHeuristic function
+ * @return path 		An array with the path obtained from A* execution
  */
 AQuickStar.prototype._findPath = function(start, end, heuristic) {
 	var sameNodeFn = function(n1, n2) {
@@ -113,11 +144,24 @@ AQuickStar.prototype._findPath = function(start, end, heuristic) {
 };
 
 
+/**
+ * Manhattan heuristic
+ * @param x1		1st point x axis
+ * @param y1		1st point y axis
+ * @param x2		2nd point x axis
+ * @param y2		2nd point y axis
+ * @return			the manhattanHeuristic distance between 1st and 2nd point
+ */
 AQuickStar.prototype.manhattanHeuristic = function(x1, y1, x2, y2) {
 	return Math.abs(x2 - x1) + Math.abs(y2 - y1);
 };
 
 
+/**
+ * Retrive the quadtree neighbors from a given bound.
+ * @param bounds		An object with x, y, width and height properties
+ * @return result		An array with the quadtree bound's neighbors				
+ */
 AQuickStar.prototype._getNeighbors = function(bounds) {
 	var result = [];
 	var neighbors = [];
@@ -157,6 +201,12 @@ AQuickStar.prototype._getNeighbors = function(bounds) {
 };
 
 
+/**
+ * Retrieves the quadtree information from an specific node 
+ * @param node			An object with its bound information
+ * @return 				The node itself with its cost value or its quadrant information,
+ * 						representing the quadtree group where the node is contained
+ */
 AQuickStar.prototype._getNeighbor = function(node) {
 
 	var retrievedNeighbor = this.qt.getObjectNode(node);
@@ -184,5 +234,6 @@ AQuickStar.prototype._getNeighbor = function(node) {
 	};
 };
 
-
-module.exports = AQuickStar;
+// exporting it as a module
+if (module)
+	module.exports = AQuickStar;
