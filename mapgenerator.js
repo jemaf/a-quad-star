@@ -2,7 +2,7 @@
  * Map generator based on http://buildnewgames.com/astar/
  */
 
-/*
+/**
  * Map generator constructor
  * @param opt     set of parameters (width, height and wall frequency)
  */
@@ -14,7 +14,7 @@ function MapGenerator(opt) {
   this.wallFrequency = opt.wallFrequency;
 }
 
-/*
+/**
  *  Generates a random map based on parameters given at constructor
  *  @return     a matrix which represents the random map
  */
