@@ -62,9 +62,9 @@ AQuickStar.prototype.removeObstacle = function(x, y) {
  */
 AQuickStar.prototype.findPath = function(start, end, heuristic) {
 
-	start = {x: start[0], y: start[1], width: 1, height: 1};
-	end = {x: end[0], y: end[1], width: 1, height: 1};
-	heuristic = heuristic || this.manhattanHeuristic;
+	var start = {x: start[0], y: start[1], width: 1, height: 1};
+	var end = {x: end[0], y: end[1], width: 1, height: 1};
+	var heuristic = heuristic || this.manhattanHeuristic;
 
 	// add both start and end points to the quadtree
 	this.qt.insert(start);
@@ -233,6 +233,40 @@ AQuickStar.prototype._getNeighbor = function(node) {
 		cost: Math.sqrt(Math.pow(retrievedNeighbor.bounds.width, 2) + Math.pow(retrievedNeighbor.bounds.height, 2))
 	};
 };
+
+
+/**
+ * Get the number of walkable blocks
+ * @return	number of blocks that are walkable
+ */
+AQuickStar.prototype.getNumberOfWalkBlocks = function() {
+	var nodes = [];
+	for(var i = 0; i < this.width; i++) {
+		for(var j = 0; j < this.height; j++) {
+			var node = {x: i, y: j, width: 1, height: 1};
+			nodes = nodes.concat(this._getNeighbors(node));
+		}
+	}
+
+	nodes = nodes.filter((e1, index, self) => self.findIndex((e2) => {return e2.y === e1.y && e2.x === e1.x && e2.cost === e1.cost; }) === index);
+
+	return nodes.length;
+};
+
+
+/**
+ * Return the number of wall blocks
+ * @return number that indicates the ammount of walls
+ */
+AQuickStar.prototype.getNumberOfWallBlocks = function() {
+	var total = 0;
+	for(var i = 0; i < this.width; i++)
+		for(var j = 0; j < this.height; j++)
+			if(this.map == 1)
+				total++;
+
+	return total;
+}
 
 // exporting it as a module
 if (module)

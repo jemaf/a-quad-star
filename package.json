@@ -14,7 +14,9 @@
   "author": "João Eduardo Montandon",
   "license": "ISC",
   "dependencies": {
+    "console-stamp": "^0.2.4",
     "csv-generate": "^1.0.0",
+    "csv-write-stream": "^2.0.0",
     "heap": "^0.2.6",
     "simple-quadtree": "^0.1.3"
   }
