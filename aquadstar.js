@@ -3,10 +3,10 @@ var QuadTree = require('./Quadtree'),
 
 
 /**
- * AQuickStar constructor
+ * AQuadStar constructor
  * @param opt		set of parameters (map matirx, width, and height)
  */
-function AQuickStar(opt) {
+function AQuadStar(opt) {
 	opt = opt || {};
 
 	this.map = opt.map;
@@ -33,7 +33,7 @@ function AQuickStar(opt) {
  * @param x			obstacle x axis
  * @param y			obstacle y axis
  */
-AQuickStar.prototype.addObstacle = function(x, y) {
+AQuadStar.prototype.addObstacle = function(x, y) {
 	this.map[x][y] = 1;
 	this.qt.insert({x: y, y: x, width: 1, height: 1});
 };
@@ -44,7 +44,7 @@ AQuickStar.prototype.addObstacle = function(x, y) {
  * @param x			obstacle x axis
  * @param y			obstacle y axis
  */
-AQuickStar.prototype.removeObstacle = function(x, y) {
+AQuadStar.prototype.removeObstacle = function(x, y) {
 	this.map[x][y] = 0;
 	this.qt.remove({x: y, y: x, width: 1, height: 1});
 };
@@ -60,7 +60,7 @@ AQuickStar.prototype.removeObstacle = function(x, y) {
  * 						Default is manhattanHeuristic function
  * @return path 		An array with the path obtained from A* execution
  */
-AQuickStar.prototype.findPath = function(start, end, heuristic) {
+AQuadStar.prototype.findPath = function(start, end, heuristic) {
 
 	var start = {x: start[0], y: start[1], width: 1, height: 1};
 	var end = {x: end[0], y: end[1], width: 1, height: 1};
@@ -89,7 +89,7 @@ AQuickStar.prototype.findPath = function(start, end, heuristic) {
  * 						Default is manhattanHeuristic function
  * @return path 		An array with the path obtained from A* execution
  */
-AQuickStar.prototype._findPath = function(start, end, heuristic) {
+AQuadStar.prototype._findPath = function(start, end, heuristic) {
 	var sameNodeFn = function(n1, n2) {
 				return n1.x === n2.x && n1.y === n2.y && n1.width === n2.width && n1.height === n2.height;
 	};
@@ -154,7 +154,7 @@ AQuickStar.prototype._findPath = function(start, end, heuristic) {
  * @param y2		2nd point y axis
  * @return			the manhattanHeuristic distance between 1st and 2nd point
  */
-AQuickStar.prototype.manhattanHeuristic = function(x1, y1, x2, y2) {
+AQuadStar.prototype.manhattanHeuristic = function(x1, y1, x2, y2) {
 	return Math.abs(x2 - x1) + Math.abs(y2 - y1);
 };
 
@@ -164,7 +164,7 @@ AQuickStar.prototype.manhattanHeuristic = function(x1, y1, x2, y2) {
  * @param bounds		An object with x, y, width and height properties
  * @return result		An array with the quadtree bound's neighbors				
  */
-AQuickStar.prototype._getNeighbors = function(bounds) {
+AQuadStar.prototype._getNeighbors = function(bounds) {
 	var result = [];
 	var neighbors = [];
 
@@ -209,7 +209,7 @@ AQuickStar.prototype._getNeighbors = function(bounds) {
  * @return 				The node itself with its cost value or its quadrant information,
  * 						representing the quadtree group where the node is contained
  */
-AQuickStar.prototype._getNeighbor = function(node) {
+AQuadStar.prototype._getNeighbor = function(node) {
 
 	var retrievedNeighbor = this.qt.getObjectNode(node);
 
@@ -241,7 +241,7 @@ AQuickStar.prototype._getNeighbor = function(node) {
  * Get the number of walkable blocks
  * @return	number of blocks that are walkable
  */
-AQuickStar.prototype.getNumberOfWalkBlocks = function() {
+AQuadStar.prototype.getNumberOfWalkBlocks = function() {
 	var nodes = [];
 	for(var i = 0; i < this.width; i++) {
 		for(var j = 0; j < this.height; j++) {
@@ -260,7 +260,7 @@ AQuickStar.prototype.getNumberOfWalkBlocks = function() {
  * Return the number of wall blocks
  * @return number that indicates the ammount of walls
  */
-AQuickStar.prototype.getNumberOfWallBlocks = function() {
+AQuadStar.prototype.getNumberOfWallBlocks = function() {
 	var total = 0;
 	for(var i = 0; i < this.width; i++)
 		for(var j = 0; j < this.height; j++)
@@ -272,4 +272,4 @@ AQuickStar.prototype.getNumberOfWallBlocks = function() {
 
 // exporting it as a module
 if (module)
-	module.exports = AQuickStar;
+	module.exports = AQuadStar;

@@ -1,8 +1,8 @@
 {
-  "name": "a-quick-star",
+  "name": "a-quad-star",
   "version": "1.0.0",
   "description": "An implementation of A* pathfinding algorithm that uses QuadTrees as data structure.",
-  "main": "aquickstar.js",
+  "main": "aquadstar.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },

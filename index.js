@@ -1,4 +1,4 @@
-var AQS = require('./AQuickStar'),
+var AQS = require('./AQuadStar'),
     MG = require('./MapGenerator'),
     PF = require('pathfinding'), 
     fs = require('fs'),
