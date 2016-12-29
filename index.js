@@ -18,8 +18,8 @@ mapSize.forEach(function(mapValue) {
     var start = [0, 0], end = [w - 1, h - 1]; 
 
     frequency.forEach(function(frequencyValue) {
-        var aStarLengthAvg = 0;
-        var aqsLengthAvg = 0;
+        var aStarIterationsAvg = 0;
+        var aqsIterationsAvg = 0;
         var compressRateAvg = 0;
         var values = [];
 
@@ -43,14 +43,17 @@ mapSize.forEach(function(mapValue) {
             var aStarPath = finder.findPath(0, 0, w-1, h-1, grid);
             var aqsPath = aqs.findPath(start, end);
             
-            if(aStarPath.length == 0) {
+            if(aStarPath.path.length == 0) {
                 i--;
             } else {
-                aStarLengthAvg += aStarPath.length;
-                aqsLengthAvg += aqsPath.length;
-                compressRateAvg += 1 - (aqs.getNumberOfWalkBlocks() / (w * h - aqs.getNumberOfWallBlocks()));
+                aStarIterations = aStarPath.iterations;
+                aqsIterations = aqsPath.iterations;
 
-                values.push([aStarPath.length, aqsPath.length, 1 - (aqs.getNumberOfWalkBlocks() / (w * h - aqs.getNumberOfWallBlocks()))]);
+                values.push([aStarIterations, aqsIterations, 1 - (aqs.getNumberOfWalkBlocks() / (w * h - aqs.getNumberOfWallBlocks()))]);
+
+                aStarIterationsAvg += aStarIterations;
+                aqsIterationsAvg += aqsIterations;
+                compressRateAvg += 1 - (aqs.getNumberOfWalkBlocks() / (w * h - aqs.getNumberOfWallBlocks()));
             }
         }
 
@@ -62,11 +65,11 @@ mapSize.forEach(function(mapValue) {
         }
         writer.end();
 
-        aStarLengthAvg /= repeat;
-        aqsLengthAvg /= repeat;
+        aStarIterationsAvg /= repeat;
+        aqsIterationsAvg /= repeat;
         compressRateAvg /= repeat;
 
-        testData.push([mapValue, frequencyValue, aStarLengthAvg, aqsLengthAvg, compressRateAvg]);
+        testData.push([mapValue, frequencyValue, aStarIterationsAvg, aqsIterationsAvg, compressRateAvg]);
     });
 });
 

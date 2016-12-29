@@ -95,11 +95,13 @@ AQuickStar.prototype._findPath = function(start, end, heuristic) {
 	};
 	var openList = new Heap(function(x, y) { return x.f - y.f; });
 	var closedList = [];
+	var numberOfIterations = 0;
 
 	openList.push(start);
 
 	while(!openList.empty()) {
 		currentNode = openList.pop();
+		numberOfIterations++;
 
 		if(sameNodeFn(currentNode, end)) {
 			var curr = currentNode;
@@ -109,7 +111,7 @@ AQuickStar.prototype._findPath = function(start, end, heuristic) {
 				curr = curr.parent;
 			}
 			path.push(curr);	// push first node (start)
-			return path.reverse();
+			return { path: path.reverse(), iterations: numberOfIterations };
 		}
 		
 		closedList.push(currentNode);
@@ -140,7 +142,7 @@ AQuickStar.prototype._findPath = function(start, end, heuristic) {
 			}
 		}
 	}
-	return [];
+	return { path: [], iterations: numberOfIterations };
 };
 
 
